@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
+using System.Reflection;
 
 namespace sudo
 {
@@ -147,7 +148,12 @@ namespace sudo
             var path = Path.GetDirectoryName(arg);
             if (path != null && path == "")
             {
-                path = SearchPath("", arg, null, true);
+                var currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
+                if (currentDirectory.GetFiles(arg).Length == 0)
+                {
+                    path = SearchPath("", arg, null, true);
+                }
+                path = currentDirectory.FullName;
             }
             else
             {
